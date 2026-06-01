@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>标注系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <!-- ========== Auth View (Login / Register) ========== -->
+  <div class="app-view active" id="authView">
+    <div class="auth-container">
+      <!-- Login Page -->
+      <div class="auth-page" id="loginPage">
+        <div class="auth-card">
+          <div class="auth-logo">
+            <svg viewBox="0 0 48 48" width="48" height="48">
+              <rect x="6" y="6" width="36" height="36" rx="8" fill="#2563eb"/>
+              <path d="M16 24h16M24 16v16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h1 class="auth-title">标注系统</h1>
+          <p class="auth-subtitle">登录以继续</p>
+
+          <form id="loginForm" class="auth-form" autocomplete="on">
+            <div class="auth-field">
+              <label for="loginUsername">用户名</label>
+              <input type="text" id="loginUsername" autocomplete="username" required
+                     placeholder="请输入用户名" />
+            </div>
+            <div class="auth-field">
+              <label for="loginPassword">密码</label>
+              <div class="password-input-wrap">
+                <input type="password" id="loginPassword" autocomplete="current-password" required
+                       placeholder="请输入密码" />
+                <button type="button" class="password-toggle" data-target="loginPassword" aria-label="显示密码">
+                  <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="auth-error" id="loginError" hidden></div>
+            <button type="submit" class="auth-submit" id="loginSubmit">
+              <span class="btn-text">登录</span>
+              <span class="btn-spinner" hidden></span>
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            <span>还没有账号？</span>
+            <a href="#" id="goToRegister" class="auth-link">注册新账号</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Register Page -->
+      <div class="auth-page hidden" id="registerPage">
+        <div class="auth-card">
+          <div class="auth-logo">
+            <svg viewBox="0 0 48 48" width="48" height="48">
+              <rect x="6" y="6" width="36" height="36" rx="8" fill="#2563eb"/>
+              <path d="M16 24h16M24 16v16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h1 class="auth-title">注册账号</h1>
+          <p class="auth-subtitle">填写信息提交注册申请</p>
+
+          <form id="registerForm" class="auth-form" autocomplete="on">
+            <div class="auth-field">
+              <label for="regUsername">用户名</label>
+              <input type="text" id="regUsername" autocomplete="username" required
+                     placeholder="2-32位字符" minlength="2" maxlength="32" />
+            </div>
+            <div class="auth-field">
+              <label for="regPassword">密码</label>
+              <div class="password-input-wrap">
+                <input type="password" id="regPassword" autocomplete="new-password" required
+                       placeholder="至少4位字符" minlength="4" />
+                <button type="button" class="password-toggle" data-target="regPassword" aria-label="显示密码">
+                  <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="regPasswordConfirm">确认密码</label>
+              <div class="password-input-wrap">
+                <input type="password" id="regPasswordConfirm" autocomplete="new-password" required
+                       placeholder="再次输入密码" minlength="4" />
+                <button type="button" class="password-toggle" data-target="regPasswordConfirm" aria-label="显示密码">
+                  <svg class="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="auth-error" id="registerError" hidden></div>
+            <button type="submit" class="auth-submit" id="registerSubmit">
+              <span class="btn-text">提交注册申请</span>
+              <span class="btn-spinner" hidden></span>
+            </button>
+          </form>
+
+          <div class="auth-footer">
+            <span>已有账号？</span>
+            <a href="#" id="goToLogin" class="auth-link">返回登录</a>
+          </div>
+          <p class="auth-hint">注册后需管理员审批才能使用</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Page 1: Dataset Management ========== -->
+  <div class="app-view" id="manageView">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>标注系统</h1>
+        <p class="sidebar-subtitle">数据集管理</p>
+      </div>
+
+      <div class="sidebar-actions">
+        <label class="upload-btn" for="fileUpload">
+          <span>+ 上传 JSONL</span>
+        </label>
+        <input type="file" id="fileUpload" accept=".jsonl" hidden />
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="stats-btn" id="statsBtn">数据分析</button>
+      </div>
+
+      <div class="sidebar-actions" id="adminActions" hidden>
+        <button class="admin-btn" id="adminBtn">用户管理</button>
+      </div>
+
+      <div class="file-tree" id="fileTree">
+        <p class="tree-empty">正在加载...</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <span id="currentUsername"></span>
+          <div class="user-actions">
+            <button class="logout-btn" id="changePasswordBtn">修改密码</button>
+            <button class="logout-btn" id="logoutBtn">退出登录</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="manage-welcome">
+      <div class="welcome-content">
+        <h2>选择数据集进入标注</h2>
+        <p>从左侧点击某个数据集下的 checkpoint 开始标注。</p>
+      </div>
+    </main>
+
+    <div class="toast-container" id="toast"></div>
+  </div>
+
+  <!-- ========== Page 2: Annotation Workspace ========== -->
+  <div class="app-view" id="annotateView">
+    <header class="anno-header">
+      <div class="anno-nav">
+        <button class="btn-back" id="backToManage">← 返回</button>
+        <span class="anno-breadcrumb" id="annoBreadcrumb"></span>
+      </div>
+
+      <div class="anno-controls">
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="progressText">0 / 0</span>
+        <span class="annotated-status" id="annotatedStatus"></span>
+
+        <button class="btn-nav" id="prevBtn" title="上一条 (←)">← 上一条</button>
+        <button class="btn-nav" id="nextBtn" title="下一条 (→)">下一条 →</button>
+
+        <button class="btn-save" id="saveBtn">保存</button>
+        <span class="save-status" id="saveStatus"></span>
+      </div>
+    </header>
+
+    <div class="anno-body">
+      <div class="anno-image-panel" id="imagePanel">
+        <div class="image-container" id="imageContainer">
+          <div class="image-loading-overlay" id="imageLoading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">加载中...</div>
+            <div class="loading-bar"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
+          </div>
+          <img id="annoImage" alt="样本图片" draggable="false" />
+        </div>
+        <div class="image-zoom-hint" id="zoomHint">100%</div>
+        <div class="image-info" id="imageInfo"></div>
+      </div>
+
+      <div class="anno-text-panel">
+        <div class="prompt-section" id="systemSection">
+          <div class="prompt-header">
+            <span class="prompt-label">System Prompt</span>
+            <button class="prompt-toggle" data-target="systemBody">收起</button>
+          </div>
+          <div class="prompt-body" id="systemBody">
+            <textarea id="systemInput" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="prompt-section" id="userSection">
+          <div class="prompt-header">
+            <span class="prompt-label">User Prompt</span>
+            <button class="prompt-toggle" data-target="userBody">收起</button>
+          </div>
+          <div class="prompt-body" id="userBody">
+            <textarea id="userInput" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="prompt-section prompt-answer" id="answerSection">
+          <div class="prompt-header">
+            <span class="prompt-label">Assistant Answer</span>
+          </div>
+          <div class="prompt-body prompt-answer-body">
+            <textarea id="answerInput" rows="12"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Page 3: Data Analysis ========== -->
+  <div class="app-view" id="statsView">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>标注系统</h1>
+        <p class="sidebar-subtitle">数据分析</p>
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="stats-back-btn" id="backToManageFromStats">← 返回管理</button>
+      </div>
+
+      <div class="stats-ds-list" id="statsDsList">
+        <p class="tree-empty">正在加载...</p>
+      </div>
+    </aside>
+
+    <main class="stats-main">
+      <h2 class="stats-title" id="statsTitle">选择一个数据集查看统计</h2>
+      <div class="stats-table-wrap" id="statsTableWrap"></div>
+    </main>
+  </div>
+
+  <!-- ========== Page 4: Admin User Management ========== -->
+  <div class="app-view" id="adminView">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>标注系统</h1>
+        <p class="sidebar-subtitle">用户管理</p>
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="stats-back-btn" id="backToManageFromAdmin">← 返回管理</button>
+      </div>
+
+      <div class="admin-nav">
+        <button class="admin-nav-btn active" data-tab="pending">待审批</button>
+        <button class="admin-nav-btn" data-tab="all">所有用户</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <h2 class="admin-title" id="adminTitle">待审批用户</h2>
+      <div class="admin-table-wrap" id="adminTableWrap">
+        <p class="tree-empty">加载中...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========== Batch Replace Modal ========== -->
+  <div class="modal-overlay" id="batchReplaceModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">批量替换 Prompt</h3>
+        <button class="modal-close" id="modalClose">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-field-label">
+            <input type="checkbox" id="replaceSystemCheck" />
+            替换 System Prompt
+          </label>
+          <textarea id="replaceSystemInput" rows="3" placeholder="新的 system prompt 内容"></textarea>
+        </div>
+        <div class="modal-field">
+          <label class="modal-field-label">
+            <input type="checkbox" id="replaceUserCheck" />
+            替换 User Prompt
+          </label>
+          <textarea id="replaceUserInput" rows="3" placeholder="新的 user prompt 内容"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" id="modalCancel">取消</button>
+        <button class="modal-btn modal-btn-primary" id="modalConfirm">确认替换</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Change Password Modal ========== -->
+  <div class="modal-overlay" id="changePasswordModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">修改密码</h3>
+        <button class="modal-close" id="cpModalClose">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label class="modal-field-label">原密码</label>
+          <input type="password" id="cpOldPassword" class="modal-input" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-field-label">新密码</label>
+          <input type="password" id="cpNewPassword" class="modal-input" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-field-label">确认新密码</label>
+          <input type="password" id="cpNewPasswordConfirm" class="modal-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" id="cpModalCancel">取消</button>
+        <button class="modal-btn modal-btn-primary" id="cpModalConfirm">确认修改</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

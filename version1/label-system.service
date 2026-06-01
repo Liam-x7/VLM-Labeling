@@ -1,0 +1,13 @@
+[Unit]
+Description=Label System Backend
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/label-system
+ExecStart=/usr/bin/python3 -m backend.main --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
